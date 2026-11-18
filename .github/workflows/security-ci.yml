@@ -1,0 +1,36 @@
+
+name: Python Security CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  security-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install safety bandit
+
+      - name: Run unit tests
+        run: pytest -v
+
+      - name: Scan dependencies with Safety
+        continue-on-error: true
+        run: safety check
+
+      - name: Scan code with Bandit
+        continue-on-error: true
+        run: bandit -r . -x ./tests
