@@ -1,4 +1,3 @@
-
 name: Python Security CI
 
 on:
@@ -25,7 +24,7 @@ jobs:
           pip install safety bandit
 
       - name: Run unit tests
-        run: pytest -v
+        run: PYTHONPATH=. pytest -v
 
       - name: Scan dependencies with Safety
         continue-on-error: true
